@@ -8,9 +8,12 @@ import glob
 import torch
 from datetime import datetime
 
+# **新增这一行：导入 flappy_bird_gymnasium 库以注册环境**
+import flappy_bird_gymnasium 
+
 # 确保项目根目录在 sys.path 中，以便正确导入模块
 current_file_dir = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = current_file_dir
+PROJECT_ROOT = current_file_dir 
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
@@ -55,9 +58,19 @@ def main():
         
         elif choice == '1': # 从零开始训练
             print("\n--- 启动从零开始训练 ---")
-            train_config = TrainingConfig() # 加载默认训练配置
-            train_config.load_model_path = None # 明确设置为 None，确保从头开始
+            train_config = TrainingConfig() 
+            train_config.load_model_path = None # 明确设置为 None
             
+            # 将相对路径转换为绝对路径，并更新到配置中
+            train_config.model_save_base_dir = os.path.join(PROJECT_ROOT, train_config.model_save_base_dir)
+            train_config.plot_save_base_dir = os.path.join(PROJECT_ROOT, train_config.plot_save_base_dir)
+            
+            # 确保 plots 目录存在
+            os.makedirs(train_config.plot_save_base_dir, exist_ok=True)
+
+            print(f"模型将保存到基目录: {train_config.model_save_base_dir}")
+            print(f"训练图和日志将保存到基目录: {train_config.plot_save_base_dir}")
+
             trainer = PPOTrainer(train_config)
             try:
                 trainer.train()
@@ -75,15 +88,21 @@ def main():
                 print(f"错误: 模型文件不存在于路径: {model_path_to_resume}")
                 continue
 
-            train_config = TrainingConfig() # 加载默认训练配置
+            train_config = TrainingConfig() 
             train_config.load_model_path = model_path_to_resume # 动态设置加载路径
+
+            # 将相对路径转换为绝对路径，并更新到配置中
+            train_config.model_save_base_dir = os.path.join(PROJECT_ROOT, train_config.model_save_base_dir)
+            train_config.plot_save_base_dir = os.path.join(PROJECT_ROOT, train_config.plot_save_base_dir)
+
+            # 确保 plots 目录存在
+            os.makedirs(train_config.plot_save_base_dir, exist_ok=True)
+            
+            print(f"模型将保存到基目录: {train_config.model_save_base_dir}")
+            print(f"训练图和日志将保存到基目录: {train_config.plot_save_base_dir}")
 
             trainer = PPOTrainer(train_config)
             try:
-                # 恢复训练时，需要设置 start_timesteps
-                # 从 checkpoint 中读取 current_timesteps 或手动指定
-                # 假设 checkpoint['current_timesteps'] 包含了当前的步数
-                # 为了简化，我们暂时不自动从 checkpoint 读取，如果需要，这部分可以在 PPOTrainer._load_model 中完成
                 print(f"将从模型 {model_path_to_resume} 恢复训练。")
                 trainer.train()
                 print("恢复训练完成！")
@@ -94,36 +113,43 @@ def main():
 
         elif choice == '3': # 测试指定模型
             print("\n--- 启动模型测试 ---")
-            test_config = TestConfig() # 加载测试配置
+            test_config = TestConfig() 
 
             test_model_path = input("请输入要测试的模型完整路径 (留空则测试最新模型): ").strip()
 
+            # 将相对路径转换为绝对路径，并更新到配置中
+            test_config.model_search_base_dir = os.path.join(PROJECT_ROOT, test_config.model_search_base_dir)
+            test_config.plot_save_base_dir = os.path.join(PROJECT_ROOT, test_config.plot_save_base_dir) # 尽管测试通常不保存新图，但保持一致性
+
+            # 确保 plots 目录存在
+            os.makedirs(test_config.plot_save_base_dir, exist_ok=True)
+
             if test_model_path == "": # 用户留空，自动查找最新
-                model_path_from_latest, error_msg = get_latest_model_path(os.path.join(PROJECT_ROOT, test_config.model_search_base_dir))
+                model_path_from_latest, error_msg = get_latest_model_path(test_config.model_search_base_dir) # 使用修改后的 search_base_dir
                 if model_path_from_latest:
                     test_model_path = model_path_from_latest
                     print(f"将测试最新模型: {test_model_path}")
                 else:
                     print(f"错误: {error_msg}")
-                    continue # 返回主菜单
+                    continue 
             elif not os.path.exists(test_model_path):
                 print(f"错误: 模型文件不存在于路径: {test_model_path}")
                 continue
             
             # 为 PPOTrainer 创建一个兼容的配置对象
-            # PPOTrainer 构造函数需要 TrainingConfig 类的实例，即使是用于测试
-            # 所以我们创建一个临时的 TrainingConfig 实例，并填充测试所需参数
-            temp_trainer_config = TrainingConfig() 
+            temp_trainer_config = TrainingConfig() # 使用 TrainingConfig 的结构，只为满足 PPOTrainer 的构造函数
             temp_trainer_config.env_name = test_config.env_name
-            temp_trainer_config.n_envs = test_config.n_envs # 测试时通常为 1
+            temp_trainer_config.n_envs = test_config.n_envs 
             temp_trainer_config.test_render_mode = test_config.test_render_mode
             temp_trainer_config.test_episodes_after_train = test_config.test_episodes_after_train
-            temp_trainer_config.load_model_path = test_model_path # **将要加载的模型路径赋值给它**
+            temp_trainer_config.load_model_path = test_model_path 
+            
+            # **重要：将 plot_save_base_dir 传递给 temp_trainer_config，因为测试模式也可能需要保存图 (例如测试结果图)**
+            temp_trainer_config.plot_save_base_dir = test_config.plot_save_base_dir 
+            temp_trainer_config.model_save_base_dir = test_config.model_search_base_dir # 这个在测试时实际不用于保存，但为了结构完整性
 
-            # 初始化 PPOTrainer，它会根据 temp_trainer_config.load_model_path 来加载模型
             trainer = PPOTrainer(temp_trainer_config) 
             
-            # 调用 trainer 内部的 test_agent 方法进行测试
             try:
                 trainer.test_agent(test_model_path)
                 print("模型测试完成！")

@@ -1,6 +1,6 @@
 # === 文件：训练参数定义 ===
 # 位置：E:\ai_work\Flappy Bird\config\training_params.py
-# 用途：定义 PPO 算法的训练超参数和环境配置
+# 用途：定义 PPO 算法的训练超参数及环境设置
 
 class TrainingConfig:
     """训练配置类，用于定义 PPO 算法的超参数及环境设置"""
@@ -13,7 +13,7 @@ class TrainingConfig:
                                          # 训练时通常使用 "rgb_array" 以提高速度
 
         # --- 算法选择 ---
-        self.algorithm = "ppo"           # 默认算法：'ppo' 或 'dqn' (需在 train_flappy.py 中匹配)
+        self.algorithm = "ppo"           # 默认算法：'ppo' 或 'dqn' (需在 main_flappy.py 中匹配)
 
         # --- 核心训练超参数 ---
         self.lr = 3e-4                   # 学习率，控制优化器更新模型参数的步长
@@ -32,7 +32,10 @@ class TrainingConfig:
         self.log_interval_episodes = 10  # 每隔多少个 episode 打印一次日志和平均奖励
 
         # ==================== 模型保存路径 (训练时只保存，不在这里加载) ====================
+        # **重要：这里必须是相对路径！** 例如 "trained_models" 而不是 "E:\..."
         self.model_save_base_dir = "trained_models"  
         
-        # **重要：这里始终为 None**。因为恢复训练的路径会通过用户输入动态设置。
-        self.load_model_path = None
+        # **新增：绘图和训练日志的保存基目录，同样是相对路径**
+        self.plot_save_base_dir = "plots"
+
+        self.load_model_path = None # 这里始终为 None

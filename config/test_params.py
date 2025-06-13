@@ -15,9 +15,12 @@ class TestConfig:
         #        或者设置为一个默认的特定模型路径，如果你想总是测试它。**
         self.load_model_path = None 
         
-        # 当 self.load_model_path 为 None 时，自动查找模型的根目录
+        # **重要：这里必须是相对路径！** 例如 "trained_models" 而不是 "E:\..."
         self.model_search_base_dir = "trained_models" 
         
+        # **新增：绘图和训练日志的保存基目录，同样是相对路径**
+        self.plot_save_base_dir = "plots"
+
         # --- 测试行为 ---
         self.test_episodes_after_train = 5 # 测试进行的回合数
         self.test_render_mode = "human"    # 测试时的渲染模式 ("human" 显示画面, "rgb_array" 不显示)

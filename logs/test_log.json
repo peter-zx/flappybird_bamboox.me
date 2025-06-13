@@ -1,0 +1,242 @@
+[
+    {
+        "env": 1,
+        "episode": 1,
+        "reward": -0.8999999999999986,
+        "steps": 50
+    },
+    {
+        "env": 2,
+        "episode": 1,
+        "reward": -0.8999999999999986,
+        "steps": 50
+    },
+    {
+        "env": 3,
+        "episode": 1,
+        "reward": -2.699999999999998,
+        "steps": 50
+    },
+    {
+        "env": 4,
+        "episode": 1,
+        "reward": -0.8999999999999986,
+        "steps": 50
+    },
+    {
+        "env": 1,
+        "episode": 2,
+        "reward": -2.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 2,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 2,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 2,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 3,
+        "reward": -6.299999999999999,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 3,
+        "reward": -3.299999999999998,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 3,
+        "reward": -5.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 3,
+        "reward": -5.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 4,
+        "reward": -6.899999999999999,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 4,
+        "reward": -4.499999999999998,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 4,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 4,
+        "reward": -2.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 5,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 5,
+        "reward": -2.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 5,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 5,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 6,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 6,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 6,
+        "reward": -5.699999999999998,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 6,
+        "reward": -2.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 7,
+        "reward": -6.299999999999999,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 7,
+        "reward": -2.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 7,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 7,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 8,
+        "reward": -3.899999999999998,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 8,
+        "reward": -7.499999999999998,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 8,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 8,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 9,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 9,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 9,
+        "reward": -2.099999999999998,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 9,
+        "reward": -3.899999999999998,
+        "steps": 51
+    },
+    {
+        "env": 1,
+        "episode": 10,
+        "reward": -2.699999999999998,
+        "steps": 51
+    },
+    {
+        "env": 2,
+        "episode": 10,
+        "reward": -4.499999999999998,
+        "steps": 51
+    },
+    {
+        "env": 3,
+        "episode": 10,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    },
+    {
+        "env": 4,
+        "episode": 10,
+        "reward": -0.8999999999999986,
+        "steps": 51
+    }
+]
