@@ -1,88 +1,47 @@
-# === 修改文件：训练脚本 ===
-# 原因：优化日志记录和绘图，支持算法切换
-from startup.init_trainer import initialize_trainer
-from config.training_params import TrainingConfig
-from plot_utils import plot_training_progress  # 新增：导入绘图工具
-import os
-import json
-import torch
+# === 文件：训练启动主程序 ===
+# 位置：E:\ai_work\Flappy Bird\train_flappy.py
+# 用途：加载配置，创建 Trainer 实例并启动训练
 
-# === 修改部分：设置路径 ===
-# 原因：统一路径管理，保存日志和图表
-PROJECT_ROOT = r"E:\ai_work\Flappy Bird"
-LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
-PLOT_DIR = os.path.join(PROJECT_ROOT, "plots")
-os.makedirs(LOG_DIR, exist_ok=True)
-os.makedirs(PLOT_DIR, exist_ok=True)
-# === 修改结束 ===
+import os
+import sys
+
+# 将项目根目录添加到 Python 路径，确保可以找到 config 和 algorithms 模块
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(PROJECT_ROOT)
+
+# 显式导入 flappy_bird_gymnasium 包，以确保其环境被注册
+import flappy_bird_gymnasium # <--- 添加这一行！
+
+from config.training_params import TrainingConfig # 导入配置类
+from algorithms.ppo import PPOTrainer # 导入 PPO 训练器
 
 def main():
-    # 初始化训练器
+    # 1. 加载训练配置
     config = TrainingConfig()
-    config.algorithm = "ppo"  # 可改为 "dqn" 切换算法
-    trainer = initialize_trainer(config)
 
-    # 加载保存点
-    save_path = os.path.join(PROJECT_ROOT, "flappy_bird_models_20250610_184044", "model_step_1007616.pth")
-    if os.path.exists(save_path):
-        checkpoint = torch.load(save_path)
-        trainer.network.load_state_dict(checkpoint['network_state_dict'])
-        trainer.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        trainer.episode_rewards = checkpoint['episode_rewards']
-        trainer.episode_lengths = checkpoint['episode_lengths']
-        print(f"从 {save_path} 加载模型，步数: {checkpoint['timesteps']}")
-    
-    # === 修改部分：初始化日志 ===
-    # 原因：保存训练数据，便于分析和绘图
-    train_log_path = os.path.join(LOG_DIR, "train_log.json")
-    train_results = []
-    # === 修改结束 ===
-    
-    # 开始训练
+    # 2. 根据配置选择并初始化训练器
+    # 这里我们只支持 PPO，如果需要支持 DQN，可以 uncomment 对应的部分
+    if config.algorithm == "ppo":
+        trainer = PPOTrainer(config) # 将配置对象传递给 PPO 训练器
+    # elif config.algorithm == "dqn":
+    #     from algorithms.dqn import DQNTrainer
+    #     trainer = DQNTrainer(config) # 如果实现了DQN，这里可以实例化
+    else:
+        raise ValueError(f"不支持的算法: {config.algorithm}")
+
+    # 3. 启动训练
     try:
-        save_dir = trainer.train(total_timesteps=config.total_timesteps, start_timesteps=config.start_timesteps)
-        print(f"\n训练完成! 模型保存在: {save_dir}")
-        
-        # === 修改部分：保存训练日志 ===
-        # 原因：记录奖励和步数数据
-        train_results = [
-            {"episode": i + 1, "reward": r, "steps": l}
-            for i, (r, l) in enumerate(zip(trainer.episode_rewards, trainer.episode_lengths))
-        ]
-        with open(train_log_path, "w") as f:
-            json.dump(train_results, f, indent=4)
-        # === 修改结束 ===
-        
-        # === 修改部分：绘制训练进度 ===
-        # 原因：优化绘图，与 training_progress.png 一致
-        trainer.plot_training_progress()  # 保留原始绘图
-        plot_training_progress(
-            trainer.episode_rewards,
-            trainer.episode_lengths,
-            save_path=os.path.join(PLOT_DIR, "train_progress.png")
-        )
-        print(f"训练进度图已保存至: {PLOT_DIR}\\train_progress.png")
-        # === 修改结束 ===
-        
+        trainer.train()
     except KeyboardInterrupt:
-        print("\n训练被用户中断")
-        trainer.plot_training_progress()
-        # 保存日志
-        train_results = [
-            {"episode": i + 1, "reward": r, "steps": l}
-            for i, (r, l) in enumerate(zip(trainer.episode_rewards, trainer.episode_lengths))
-        ]
-        with open(train_log_path, "w") as f:
-            json.dump(train_results, f, indent=4)
-        plot_training_progress(
-            trainer.episode_rewards,
-            trainer.episode_lengths,
-            save_path=os.path.join(PLOT_DIR, "train_progress.png")
-        )
+        print("\n训练被用户手动中断。")
+        # 此时 trainer 内部已经处理了日志和绘图的保存
     except Exception as e:
-        print(f"\n训练过程中出现错误: {e}")
+        print(f"\n训练过程中发生意外错误: {e}")
         import traceback
         traceback.print_exc()
+
+    # 4. 训练完成后，由 trainer 内部处理绘制图表和测试
+    # 不需要在这里再次调用 plot 或 test
 
 if __name__ == "__main__":
     main()
