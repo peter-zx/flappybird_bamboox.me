@@ -26,7 +26,7 @@ class TrainingConfig:
         self.ent_coef = 0.05             # PPO 的熵损失系数，鼓励探索 (0.01-0.05 常用，0.05 探索性更强)
 
         # --- 训练进度控制 ---
-        self.total_timesteps = 100000    # 总训练步数 (建议 500万步或更高)
+        self.total_timesteps = 1000000    # 总训练步数 (建议 500万步或更高)
         self.start_timesteps = 0         # 起始步数，允许从某个时间步恢复训练 (从 0 开始表示全新训练)
         self.save_interval = 20000       # 模型保存间隔步数 (每 2万步保存一次)
         self.log_interval_episodes = 10  # 每隔多少个 episode 打印一次日志和平均奖励
